@@ -1,0 +1,196 @@
+.container {
+  display: flex;
+  background-color: #e5e7ea80;
+  padding: 20px;
+  color: white;
+  font-family: Arial, sans-serif;
+  background-image: url(/src/Images/5db73a5c10414c4dbee0ac53ce2d56cc.jpg);
+  background-size: cover; /* Adjust as needed */
+  background-position: center;
+  max-width: 100%;
+    margin: 0 auto; 
+    height: 100%; 
+}
+.rename-columns-container {
+  margin-top: 20px;
+}
+
+.columns-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.column-item {
+  margin-bottom: 10px;
+}
+
+label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+input[type='text'] {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+}
+
+
+.sidebar {
+  width: 250px;
+  background-color: rgb(6, 60, 81);
+  color: white;
+  padding: 20px;
+  height: 800px;
+  margin-left: -18px;
+  margin-top:-20px;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  position:relative;
+}
+
+.sidebar h1,
+.sidebar h2 {
+  color: white;
+}
+
+.sidebar-section {
+  margin-bottom: 20px;
+}
+
+.dropdown select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.dropdown select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.dropdown button {
+  width: 100%;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color:grey;
+  color:white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.file-upload-label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.file-upload-label:hover {
+  background-color: #0056b3;
+}
+
+.graph-container {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Adjust spacing between dropdown and button */
+.dropdown-button-container {
+  margin-top: 10px;
+}
+/* Graph container styles */
+.graph-container {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 20px;
+  padding: 20px;
+}
+.upload-container {
+  margin-top: 20px;
+}
+
+.fill-method-dropdown {
+  margin-top: 20px;
+}
+
+.fill-method-dropdown label {
+  margin-right: 10px;
+}
+.data-manipulation-container {
+  margin-top: 20px;
+}
+
+.scrollable-section {
+  max-height: 200px; /* Set maximum height */
+  overflow-y: auto; /* Add vertical scrollbar */
+  padding: 10px;
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 5px; /* Add border radius */
+}
+
+.manipulation-item {
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #444; /* Set button background color */
+  color: #fff; /* Set button text color */
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+button:hover {
+  background-color:#444; /* Change background color on hover */
+}
+
+
+
+.graph-container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
+}
+
+.graph {
+  width: 100%;
+  height: 400px;
+}
+
+/* Adjust graph styles based on Plotly.js */
+.plotly-graph-div {
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
