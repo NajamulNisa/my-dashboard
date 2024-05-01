@@ -6,49 +6,41 @@ function DataUploader() {
   const [file, setFile] = useState(null);
   const [scatterData, setScatterData] = useState(null);
   const [barData, setBarData] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  
+  // Add more state variables for other graph types as needed
 
   useEffect(() => {
     fetchDataForScatter();
     fetchDataForBar();
-   
+    // Fetch data for other graph types as needed
   }, []);
 
-    const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile && selectedFile.type === 'text/csv') {
-      setFile(selectedFile);
-      setErrorMessage('');
-    } else {
-      setFile(null);
-      setErrorMessage('Please select a CSV file.');
-    }
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
   };
 
-  const handleUpload = async () => {
+  const handleFileUpload = async () => {
     if (!file) return;
-
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const response = await axios.post('https://fastapi-x21t.onrender.com/upload/', formData, {
+      await axios.post('https://fastapi-x21t.onrender.com/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log('File uploaded successfully:', response.data);
-      // Handle success, e.g., display message to the user
+      // After successful upload, fetch data for graphs
+      fetchDataForScatter();
+      fetchDataForBar();
+      // Fetch data for other graph types as needed
     } catch (error) {
       console.error('Error uploading file:', error);
-      // Handle error, e.g., display error message to the user
     }
   };
 
   const fetchDataForScatter = async () => {
     try {
-      const response = await axios.post('https://fastapi-x21t.onrender.com/plot/scatter' , { params: { x_column: 'age', y_column: 'sex' }});
+      const response = await axios.post('https://fastapi-x21t.onrender.com/plot/scatter');
       setScatterData(response.data);
     } catch (error) {
       console.error('Error fetching scatter data:', error);
@@ -57,21 +49,19 @@ function DataUploader() {
 
   const fetchDataForBar = async () => {
     try {
-      const response = await axios.post('https://fastapi-x21t.onrender.com/plot/bar' , { params: { x_column: 'age', y_column: 'sex' }});
+      const response = await axios.post('https://fastapi-x21t.onrender.com/plot/bar');
       setBarData(response.data);
     } catch (error) {
       console.error('Error fetching bar data:', error);
     }
   };
 
+  // Add more functions to fetch data for other graph types as needed
+
   return (
     <div>
-      {/* <input accept=".csv" type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button> */}
-       <input type="file" accept=".csv" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-   
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleFileUpload}>Upload</button>
 
       {scatterData && (
         <div>
@@ -92,10 +82,10 @@ function DataUploader() {
           />
         </div>
       )}
+
+      {/* Render other graphs based on fetched data */}
     </div>
   );
 }
+
 export default DataUploader;
-
-
-
