@@ -15,10 +15,10 @@ function DataDashboard() {
       let response;
       switch (graphType) {
         case 'scatter':
-          response = await axios.post('https://cors-anywhere.herokuapp.com/https://fastapi-x21t.onrender.com/plot/scatter');
+          response = await axios.post('https://fastapi-x21t.onrender.com/plot/scatter');
           break;
         case 'bar':
-          response = await axios.post('https://cors-anywhere.herokuapp.com/https://fastapi-x21t.onrender.com/plot/bar/');
+          response = await axios.post('https://fastapi-x21t.onrender.com/plot/bar/');
           
           break;
         // Add cases for other graph types as needed
