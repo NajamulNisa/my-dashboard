@@ -1,100 +1,18 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import Plot from 'react-plotly.js';
-
-// function DataUploader() {
-//   const [file, setFile] = useState(null);
-//   const [scatterData, setScatterData] = useState(null);
-//   const [barData, setBarData] = useState(null);
-//   // Add more state variables for other graph types as needed
-
-//   useEffect(() => {
-//     fetchDataForScatter();
-//     fetchDataForBar();
-//     // Fetch data for other graph types as needed
-//   }, []);
-
-//   const handleFileChange = (event) => {
-//     setFile(event.target.files[0]);
-//   };
-
-//   const handleFileUpload = async () => {
-//     if (!file) return;
-//     const formData = new FormData();
-//     formData.append('file', file);
-
-//     try {
-//       await axios.post('https://fastapi-x21t.onrender.com/upload', formData, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data'
-//         }
-//       });
-//       // After successful upload, fetch data for graphs
-//       fetchDataForScatter();
-//       fetchDataForBar();
-//       // Fetch data for other graph types as needed
-//     } catch (error) {
-//       console.error('Error uploading file:', error);
-//     }
-//   };
-
-//   const fetchDataForScatter = async () => {
-//     try {
-//       const response = await axios.post('https://fastapi-x21t.onrender.com/plot/scatter',  { params: { x_column: 'ApplicantIncome', y_column: 'CoapplicantIncome' }});
-//       setScatterData(response.data);
-//     } catch (error) {
-//       console.error('Error fetching scatter data:', error);
-//     }
-//   };
-
-//   const fetchDataForBar = async () => {
-//     try {
-//       const response = await axios.post('https://fastapi-x21t.onrender.com/plot/bar', { params: { x_column: 'ApplicantIncome', y_column: 'CoapplicantIncome' }});
-//       setBarData(response.data);
-//     } catch (error) {
-//       console.error('Error fetching bar data:', error);
-//     }
-//   };
-
-//   // Add more functions to fetch data for other graph types as needed
-
-//   return (
-//     <div>
-//       <input type="file" onChange={handleFileChange} />
-//       <button onClick={handleFileUpload}>Upload</button>
-
-//       {scatterData && (
-//         <div>
-//           <h2>Scatter Plot</h2>
-//           <Plot
-//             data={[{ type: 'scatter', x: scatterData.x, y: scatterData.y }]}
-//             layout={{ width: 800, height: 400, title: 'Scatter Plot' }}
-//           />
-//         </div>
-//       )}
-
-//       {barData && (
-//         <div>
-//           <h2>Bar Chart</h2>
-//           <Plot
-//             data={[{ type: 'bar', x: barData.x, y: barData.y }]}
-//             layout={{ width: 800, height: 400, title: 'Bar Chart' }}
-//           />
-//         </div>
-//       )}
-
-//       {/* Render other graphs based on fetched data */}
-//     </div>
-//   );
-// }
-
-// export default DataUploader;
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Plot from 'react-plotly.js';
 
 function DataUploader() {
   const [uploadedData, setUploadedData] = useState(null);
+  const [graphType, setGraphType] = useState('');
+  const [graphData, setGraphData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (graphType) {
+      fetchDataForGraph();
+    }
+  }, [graphType]);
 
   // Function to handle file upload
   const handleFileUpload = async (event) => {
@@ -124,7 +42,73 @@ function DataUploader() {
       setErrorMessage('');
     } catch (error) {
       console.error('Error uploading file:', error);
-      // Handle error, e.g., display error message to the user
+      setErrorMessage('Error uploading file. Please try again.');
+    }
+  };
+
+  // Function to fetch data for the selected graph type
+  const fetchDataForGraph = async () => {
+    try {
+      let response;
+      // Fetch data based on the selected graph type
+      switch (graphType) {
+        case 'scatter':
+          response = await axios.post('https://fastapi-x21t.onrender.com/plot/scatter?x_column=ApplicantIncome&y_column=CoapplicantIncome');
+          break;
+        case 'bar':
+          response = await axios.post('https://fastapi-x21t.onrender.com/plot/bar?x_column=ApplicantIncome&y_column=CoapplicantIncome');
+          break;
+        case 'heatmap':
+          response = await axios.post('https://fastapi-x21t.onrender.com/plot/heatmap/?x_column=ApplicantIncome&y_column=CoapplicantIncome');
+          break;
+        default:
+          // Handle invalid graph type
+          setGraphData(null);
+          return;
+      }
+      // Set fetched data in state
+      console.log('Fetched data:', response.data);
+      setGraphData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setGraphData(null);
+    }
+  };
+
+  // Function to plot graph
+  const plotGraph = () => {
+    if (!graphData) {
+      return <p>No data available to plot.</p>;
+    }
+
+    // Plot graph based on graph type
+    switch (graphType) {
+      case 'scatter':
+        // Plot scatter plot
+        return (
+          <Plot
+            data={[{ type: 'scatter', x: graphData.x, y: graphData.y }]}
+            layout={{ width: 800, height: 400, title: 'Scatter Plot' }}
+          />
+        );
+      case 'bar':
+        // Plot bar chart
+        return (
+          <Plot
+            data={[{ type: 'bar', x: graphData.x, y: graphData.y }]}
+            layout={{ width: 800, height: 400, title: 'Bar Chart' }}
+          />
+        );
+      case 'heatmap':
+        // Plot histogram
+        return (
+          <Plot
+            data={[{ type: 'heatmap', x: graphData.data }]}
+            layout={{ width: 800, height: 400, title: 'heatmap' }}
+          />
+        );
+      default:
+        return null;
     }
   };
 
@@ -133,43 +117,25 @@ function DataUploader() {
       {/* Input field for file upload */}
       <input type="file" accept=".csv" onChange={handleFileUpload} />
 
-      {/* Display error message if any */}
+      {/* Dropdown for selecting graph type */}
+      <select value={graphType} onChange={(e) => setGraphType(e.target.value)}>
+        <option value="">Select Graph Type</option>
+        <option value="scatter">Scatter Plot</option>
+        <option value="bar">Bar Chart</option>
+        <option value="heatmap">Heatmap</option>
+      </select>
+
+      {/* Error message */}
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
-      {/* Display uploaded data */}
-      {uploadedData && (
-        <div style={styles.card}>
-          <h2 style={styles.cardHeader}>Uploaded Data</h2>
-          {/* Display uploaded data in a preformatted text */}
-          <pre style={styles.cardContent}>{JSON.stringify(uploadedData, null, 2)}</pre>
-        </div>
-      )}
+      {/* Plot graph based on selected graph type */}
+      {plotGraph()}
     </div>
   );
 }
 
-// CSS styles
-const styles = {
-  card: {
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    padding: '20px',
-    marginTop: '20px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#f9f9f9'
-  },
-  cardHeader: {
-    fontSize: '20px',
-    marginBottom: '10px'
-  },
-  cardContent: {
-    fontFamily: 'monospace',
-    fontSize: '14px',
-    whiteSpace: 'pre-wrap'
-  }
-};
-
 export default DataUploader;
+
 
 
 
