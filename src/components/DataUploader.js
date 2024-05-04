@@ -58,9 +58,12 @@ function DataUploader() {
         case 'bar':
           response = await axios.post('https://fastapi-x21t.onrender.com/plot/bar?x_column=ApplicantIncome&y_column=CoapplicantIncome');
           break;
-        case 'heatmap':
+        case 'histogram':
           response = await axios.post('https://fastapi-x21t.onrender.com/plot/heatmap/?x_column=ApplicantIncome&y_column=CoapplicantIncome');
           break;
+          case 'heatmap':
+            response = await axios.post('https://fastapi-x21t.onrender.com/plot/histogram?x_column=ApplicantIncome&y_column=CoapplicantIncome');
+            break;
         default:
           // Handle invalid graph type
           setGraphData(null);
@@ -107,6 +110,14 @@ function DataUploader() {
             layout={{ width: 800, height: 400, title: 'heatmap' }}
           />
         );
+        case 'histogram':
+          // Plot histogram
+          return (
+            <Plot
+              data={[{ type: 'histogram', x: graphData.data }]}
+              layout={{ width: 800, height: 400, title: 'histogram' }}
+            />
+          );
       default:
         return null;
     }
@@ -123,6 +134,7 @@ function DataUploader() {
         <option value="scatter">Scatter Plot</option>
         <option value="bar">Bar Chart</option>
         <option value="heatmap">Heatmap</option>
+        <option value="histogram">Histogram</option>
       </select>
 
       {/* Error message */}
