@@ -38,8 +38,10 @@ function DataUploader() {
             `https://fastapi-x21t.onrender.com/plot/bar?x_column=${xColumn}&y_column=${yColumn}`
           );
           break;
-        case 'heatmap':
-          response = await axios.post('https://fastapi-x21t.onrender.com/plot/heatmap/?x_column=ApplicantIncome&y_column=CoapplicantIncome');
+        case "heatmap":
+          res = await axios.post(
+            `https://fastapi-x21t.onrender.com/plot/heatmap/?x_column=${xColumn}&y_column=${yColumn}`
+          );
           break;
         default:
           setGraphData(null);
@@ -59,35 +61,36 @@ function DataUploader() {
     if (graphType) {
       fetchDataForGraph();
     }
+  }, [graphType, xColumn, yColumn]);
 
-    // Plot graph based on graph type
-    switch (graphType) {
-      case 'scatter':
-        // Plot scatter plot
-        return (
-          <Plot
-            data={[{ type: 'scatter', x: graphData.x, y: graphData.y }]}
-            layout={{ width: 800, height: 400, title: 'Scatter Plot' }}
-          />
-        );
-      case 'bar':
-        // Plot bar chart
-        return (
-          <Plot
-            data={[{ type: 'bar', x: graphData.x, y: graphData.y }]}
-            layout={{ width: 800, height: 400, title: 'Bar Chart' }}
-          />
-        );
-      case 'heatmap':
-        // Plot histogram
-        return (
-          <Plot
-            data={[{ type: 'heatmap', x: graphData.data }]}
-            layout={{ width: 800, height: 400, title: 'heatmap' }}
-          />
-        );
-      default:
-        return null;
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith(".csv")) {
+      setErrorMessage("Please select a CSV file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(
+        "https://fastapi-x21t.onrender.com/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setUploadedData(response.data);
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setErrorMessage("Error uploading file. Please try again.");
     }
   };
 
@@ -100,7 +103,6 @@ function DataUploader() {
         <option value="scatter">Scatter Plot</option>
         <option value="bar">Bar Chart</option>
         <option value="heatmap">Heatmap</option>
-        <option value="histogram">Histogram</option>
       </select>
 
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
