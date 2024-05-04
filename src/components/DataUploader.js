@@ -1,87 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Plot from 'react-plotly.js';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Plot from "react-plotly.js";
+import CsvDataDropdown from "./CsvDataDropdown";
 
 function DataUploader() {
   const [uploadedData, setUploadedData] = useState(null);
-  const [graphType, setGraphType] = useState('');
+  const [graphType, setGraphType] = useState("");
   const [graphData, setGraphData] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
+  const [xColumn, setXColumn] = useState("");
+  const [yColumn, setYColumn] = useState("");
+  const [columns, setColumns] = useState([]);
 
   useEffect(() => {
-    if (graphType) {
-      fetchDataForGraph();
+    if (uploadedData != null) {
+      let cols = Object.keys(uploadedData.column_data);
+      setColumns(cols);
+      if (cols.length >= 2) {
+        setXColumn(cols[0]);
+        setYColumn(cols[1]);
+      }
     }
-  }, [graphType]);
+  }, [uploadedData]);
 
-  // Function to handle file upload
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // Check if the file is a CSV file
-    if (!file.name.endsWith('.csv')) {
-      setErrorMessage('Please select a CSV file.');
-      return;
-    }
-
-    // Create FormData object to send file
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      // Make POST request to upload API endpoint
-      const response = await axios.post('https://fastapi-x21t.onrender.com/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      // Set uploaded data in state
-      setUploadedData(response.data);
-      setErrorMessage('');
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      setErrorMessage('Error uploading file. Please try again.');
-    }
-  };
-
-  // Function to fetch data for the selected graph type
   const fetchDataForGraph = async () => {
     try {
-      let response;
-      // Fetch data based on the selected graph type
+      let res, data;
+
       switch (graphType) {
-        case 'scatter':
-          response = await axios.post('https://fastapi-x21t.onrender.com/plot/scatter?x_column=ApplicantIncome&y_column=CoapplicantIncome');
+        case "scatter":
+          res = await axios.post(
+            `https://fastapi-x21t.onrender.com/plot/scatter?x_column=${xColumn}&y_column=${yColumn}`
+          );
           break;
-        case 'bar':
-          response = await axios.post('https://fastapi-x21t.onrender.com/plot/bar?x_column=ApplicantIncome&y_column=CoapplicantIncome');
+        case "bar":
+          res = await axios.post(
+            `https://fastapi-x21t.onrender.com/plot/bar?x_column=${xColumn}&y_column=${yColumn}`
+          );
           break;
-        case 'histogram':
+        case 'heatmap':
           response = await axios.post('https://fastapi-x21t.onrender.com/plot/heatmap/?x_column=ApplicantIncome&y_column=CoapplicantIncome');
           break;
-          case 'heatmap':
-            response = await axios.post('https://fastapi-x21t.onrender.com/plot/histogram?x_column=ApplicantIncome&y_column=CoapplicantIncome');
-            break;
         default:
-          // Handle invalid graph type
           setGraphData(null);
           return;
       }
-      // Set fetched data in state
-      console.log('Fetched data:', response.data);
-      setGraphData(response.data);
+      data = JSON.parse(res.data);
+      data.layout["width"] = 1200;
+      data.layout["height"] = 800;
+      setGraphData(data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
       setGraphData(null);
     }
   };
 
-  // Function to plot graph
-  const plotGraph = () => {
-    if (!graphData) {
-      return <p>No data available to plot.</p>;
+  useEffect(() => {
+    if (graphType) {
+      fetchDataForGraph();
     }
 
     // Plot graph based on graph type
@@ -110,14 +86,6 @@ function DataUploader() {
             layout={{ width: 800, height: 400, title: 'heatmap' }}
           />
         );
-        case 'histogram':
-          // Plot histogram
-          return (
-            <Plot
-              data={[{ type: 'histogram', x: graphData.data }]}
-              layout={{ width: 800, height: 400, title: 'histogram' }}
-            />
-          );
       default:
         return null;
     }
@@ -125,10 +93,8 @@ function DataUploader() {
 
   return (
     <div>
-      {/* Input field for file upload */}
       <input type="file" accept=".csv" onChange={handleFileUpload} />
 
-      {/* Dropdown for selecting graph type */}
       <select value={graphType} onChange={(e) => setGraphType(e.target.value)}>
         <option value="">Select Graph Type</option>
         <option value="scatter">Scatter Plot</option>
@@ -137,17 +103,38 @@ function DataUploader() {
         <option value="histogram">Histogram</option>
       </select>
 
-      {/* Error message */}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
-      {/* Plot graph based on selected graph type */}
-      {plotGraph()}
+      {columns.length > 0 && (
+        <div>
+          <CsvDataDropdown
+            label="X Column:"
+            columns={columns}
+            selectedColumn={xColumn}
+            onChange={setXColumn}
+          />
+          <CsvDataDropdown
+            label="Y Column:"
+            columns={columns}
+            selectedColumn={yColumn}
+            onChange={setYColumn}
+          />
+        </div>
+      )}
+
+      {graphData && graphType === "scatter" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+
+      {graphData && graphType === "bar" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+
+      {graphData && graphType === "heatmap" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
     </div>
   );
 }
 
 export default DataUploader;
-
-
-
-
