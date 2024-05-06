@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Plot from "react-plotly.js";
 import CsvDataDropdown from "./CsvDataDropdown";
+import '../components/Dashboard.css'
 
 function DataUploader() {
   const [uploadedData, setUploadedData] = useState(null);
@@ -22,6 +23,9 @@ function DataUploader() {
       }
     }
   }, [uploadedData]);
+  
+  
+
 
   const fetchDataForGraph = async () => {
     try {
@@ -47,6 +51,8 @@ function DataUploader() {
           setGraphData(null);
           return;
       }
+      
+
       data = JSON.parse(res.data);
       data.layout["width"] = 1200;
       data.layout["height"] = 800;
@@ -55,6 +61,7 @@ function DataUploader() {
       console.error("Error fetching data:", error);
       setGraphData(null);
     }
+
   };
 
   useEffect(() => {
@@ -96,33 +103,48 @@ function DataUploader() {
 
   return (
     <div>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
+      <div className="choose">
+      <label className="btn btn-primary">
+      <input type="file" accept=".csv"   onChange={handleFileUpload} />
+      </label>
+      </div>
+      
+      <button type="button" className="btn btn-info">
 
+      <div className="GraphType">
       <select value={graphType} onChange={(e) => setGraphType(e.target.value)}>
         <option value="">Select Graph Type</option>
         <option value="scatter">Scatter Plot</option>
         <option value="bar">Bar Chart</option>
         <option value="heatmap">Heatmap</option>
       </select>
+      </div>
+      </button>
 
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
       {columns.length > 0 && (
-        <div>
+        <div className="Axis-dropdowns" >
+        <button type="button" className="btn btn-secondary">
           <CsvDataDropdown
             label="X Column:"
             columns={columns}
             selectedColumn={xColumn}
             onChange={setXColumn}
           />
+          </button>
+
+          <button type="button" className="btn btn-secondary">
           <CsvDataDropdown
             label="Y Column:"
             columns={columns}
             selectedColumn={yColumn}
             onChange={setYColumn}
           />
+          </button>
         </div>
       )}
+      <div className="container-lg">
 
       {graphData && graphType === "scatter" && (
         <Plot data={graphData.data} layout={graphData.layout} />
@@ -136,6 +158,8 @@ function DataUploader() {
         <Plot data={graphData.data} layout={graphData.layout} />
       )}
     </div>
+    </div>
+
   );
 }
 
