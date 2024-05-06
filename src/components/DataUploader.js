@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Plot from "react-plotly.js";
 import CsvDataDropdown from "./CsvDataDropdown";
+import './Dashboard.css';
 
 function DataUploader() {
   const [uploadedData, setUploadedData] = useState(null);
@@ -43,6 +44,46 @@ function DataUploader() {
             `https://fastapi-x21t.onrender.com/plot/heatmap/?x_column=${xColumn}&y_column=${yColumn}`
           );
           break;
+          case "histogram":
+            res = await axios.post(
+              `https://fastapi-x21t.onrender.com/plot/histogram/?x_column=${xColumn}&y_column=${yColumn}`
+            );
+            break;
+            case "scatter3D":
+              res = await axios.post(
+                `https://fastapi-x21t.onrender.com//plot/scatter3d/?x_column=${xColumn}&y_column=${yColumn}`
+              );
+              break;
+              case "pie":
+                res = await axios.post(
+                  `https://fastapi-x21t.onrender.com/plot/pie/?x_column=${xColumn}&y_column=${yColumn}`
+                );
+                break;
+                case "densitymapbox":
+                  res = await axios.post(
+                    `https://fastapi-x21t.onrender.com/plot/density_mapbox/?x_column=${xColumn}&y_column=${yColumn}`
+                  );
+                  break;
+                  case "violin":
+                    res = await axios.post(
+                      `https://fastapi-x21t.onrender.com/plot/violin/?x_column=${xColumn}&y_column=${yColumn}`
+                    );
+                    break;
+                    case "strip":
+                      res = await axios.post(
+                        `https://fastapi-x21t.onrender.com/plot/strip/?x_column=${xColumn}&y_column=${yColumn}`
+                      );
+                      break;
+                      case "edfc":
+                        res = await axios.post(
+                          `https://fastapi-x21t.onrender.com/plot/ecdf/?x_column=${xColumn}&y_column=${yColumn}`
+                        );
+                        break;
+                        case "density_contour":
+                          res = await axios.post(
+                            `https://fastapi-x21t.onrender.com/plot/density_contour/?x_column=${xColumn}&y_column=${yColumn}`
+                          );
+                          break;
         default:
           setGraphData(null);
           return;
@@ -96,19 +137,27 @@ function DataUploader() {
 
   return (
     <div>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
-
+      <input type="file"  accept=".csv" onChange={handleFileUpload} />
+      <h1>Select Graph Type</h1>
       <select value={graphType} onChange={(e) => setGraphType(e.target.value)}>
         <option value="">Select Graph Type</option>
         <option value="scatter">Scatter Plot</option>
         <option value="bar">Bar Chart</option>
         <option value="heatmap">Heatmap</option>
+        <option value="histogram">Histogram</option>
+        <option value="scatter3D">Scatter3d</option>
+        <option value="densitymapbox">Density_mapbox</option>
+        <option value="pie">Pie Chart</option>
+        <option value="violin">Violin</option>
+        <option value="strip">Strip Chart</option>
+        <option value="edfc">edfc Chart</option>
+        <option value="density_contour">Density Contour Chart</option>
       </select>
 
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
       {columns.length > 0 && (
-        <div>
+        <div className="conatiner">
           <CsvDataDropdown
             label="X Column:"
             columns={columns}
@@ -133,6 +182,30 @@ function DataUploader() {
       )}
 
       {graphData && graphType === "heatmap" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "histogram" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "scatter3D" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "pie" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "densitymapbox" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "violin" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "strip" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "edfc" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "density_contour" && (
         <Plot data={graphData.data} layout={graphData.layout} />
       )}
     </div>
