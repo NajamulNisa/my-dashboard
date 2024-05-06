@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div>
-      <h1>Data Visualization Tool</h1>
+      <h1 className='Heading'>Data Visualization Dashboard</h1>
       <DataUploader onDataUpload={handleDataUpload} />
       {csvData && <CsvDataDropdown data={csvData} />}
     </div>
