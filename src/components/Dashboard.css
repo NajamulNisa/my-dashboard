@@ -202,14 +202,14 @@ button:hover {
 .Axis-dropdowns{
   display: flex;
   padding: 30px;
-  padding-left: 60px;
+  padding-left: 5px;
+  /* width: 800px; */
   
 }
 
 
 .choose{
   padding:4px;
-  padding-left: 110px;
   cursor:pointer;
   border-radius: 5px; 
   display: inline-block;
@@ -226,7 +226,12 @@ button:hover {
   border-radius: 12px;
   transition: background-color 0.3s ease;
 }
-
+.btn{
+  background-color: #4f5862;
+}
+.btn:hover {
+  background-color: green;
+}
 /* Hover effect for label */ 
 .choose label:hover {
   background-color: green;
@@ -235,9 +240,11 @@ button:hover {
 
 .GraphType{
   padding: 8px;
-  padding-left: 10px;
+  padding-left: 20px;
+  margin-left: 5px;
   align-items: center;
   justify-content: space-between;
+  
 }
 
 
@@ -246,17 +253,66 @@ button:hover {
   text-align: center;
   font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 10px;
-
+  color: #4f5862;
+  margin-right: 900px;
 }
 
 
 .container-lg{
-  max-width: 94%;
-  padding: 20px;
-  display: flex;
   justify-content: center;
-  /* border: 2px solid #ccc; */
-  border-radius: 50px;
-  margin: auto;
-  
+  min-height: 400px; /* Adjust the minimum height as needed */
+  padding-bottom: 150px;
+   max-width: 94%;
+   border-radius: 50px;
+   display: flex;
+   justify-content: center;
+   /* border: 2px solid #ccc; */
+   border-radius: 50px;
+    margin: auto; 
+  /* height: 50px;
+  padding: 20px;
+  padding-bottom: 100px;
+  display: flex; */
+  /* justify-content: center;
+   border: 2px solid #ccc;
+   border-radius: 50px;
+  margin: auto; */
 }
+.powered-by {
+  position: absolute;
+  bottom: 10px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.footer {
+  background-color: #4f5862;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 0;
+
+}
+.footer:hover {
+  background-color: green;
+}
+
+.footer h5 {
+  color: #fff;
+}
+
+.footer ul li {
+  list-style: none;
+}
+
+@media (max-width: 768px) {
+  .footer .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+

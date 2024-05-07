@@ -149,7 +149,7 @@ function DataUploader() {
       </label>
       </div>
       
-      <button type="button" className="btn btn-info">
+      <button type="button" className="btn">
 
       <div className="GraphType">
       <select value={graphType} onChange={(e) => setGraphType(e.target.value)}>
@@ -193,7 +193,6 @@ function DataUploader() {
         </div>
       )}
       <div className="container-lg">
-
       {graphData && graphType === "scatter" && (
         <Plot data={graphData.data} layout={graphData.layout} />
       )}
@@ -203,6 +202,30 @@ function DataUploader() {
       )}
 
       {graphData && graphType === "heatmap" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "histogram" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "scatter3D" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "pie" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "densitymapbox" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "violin" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "strip" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "edfc" && (
+        <Plot data={graphData.data} layout={graphData.layout} />
+      )}
+       {graphData && graphType === "density_contour" && (
         <Plot data={graphData.data} layout={graphData.layout} />
       )}
     </div>

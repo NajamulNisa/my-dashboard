@@ -1,6 +1,7 @@
 import React from 'react';
 import DataUploader from './components/DataUploader';
 import CsvDataDropdown from './components/CsvDataDropdown';
+import Footer from './components/Footer'
 
 
 
@@ -13,9 +14,10 @@ function App() {
 
   return (
     <div>
-      <h1 className='Heading'>Data Visualization Dashboard</h1>
+      <h1 className='Heading'>Data Visualization Tool</h1>
       <DataUploader onDataUpload={handleDataUpload} />
       {csvData && <CsvDataDropdown data={csvData} />}
+      <Footer />
     </div>
   );
 }
